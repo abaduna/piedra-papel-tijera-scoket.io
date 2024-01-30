@@ -38,18 +38,18 @@ function App() {
           <Col md={4}>
             <div className="d-grid gap-2">
               <Button className=" btn-primary" onClick={() => setSelct(1)}>
-                piedra
+                (1)piedra
               </Button>
             </div>
           </Col>
           <Col md={4}>
             <div className="d-grid gap-2">
-              <Button  variant="warning"  onClick={() => setSelct(2)}>papel</Button>
+              <Button  variant="warning"  onClick={() => setSelct(2)}> (2)papel</Button>
             </div>
           </Col>
           <Col md={4}>
             <div className="d-grid gap-2">
-              <Button  variant="success"  onClick={() => setSelct(3)}>tijera</Button>
+              <Button  variant="success"  onClick={() => setSelct(3)}> (3)tijera</Button>
             </div>
           </Col>
         </Row>
