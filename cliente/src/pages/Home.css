@@ -1,0 +1,14 @@
+.modosDeJuego {
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+    margin: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: block;
+    text-align: center;
+}
+.Welcomen{
+    text-align: center
+}
