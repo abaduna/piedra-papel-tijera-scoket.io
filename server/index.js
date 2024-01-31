@@ -72,55 +72,26 @@ const ganar = () => {
 };
 io.on("connection", (socket) => {
   console.log(`connection`);
+  socket.on("play", (data) => {
+    console.log(`data`);
+    console.log(data);
+    jugadas.push(data);
+    console.log(`jugadas`);
+    console.log(jugadas);
+    jugadorUno = jugadas[0].select;
+    idJugadoUno = jugadas[0].navegadorId
+    console.log(`jugadorUno ${jugadorUno}`);
 
-  socket.on("joinRoom", (room) => {
-    // Join the specified room
-    socket.join(room);
-    console.log(`Socket joined room: ${room}`);
-
-    // Initialize room data if not exists
-    if (!rooms[room]) {
-      rooms[room] = {
-        jugadas: [],
-        players: {},
-      };
+    if (jugadas[1]) {
+      jugadorDos = jugadas[1].select;
+      idJugadoDos = jugadas[1].navegadorId
+      console.log(`jugadorDos ${jugadorDos}`);
+      ganar();
     }
-
-    // Add the player to the room
-    rooms[room].players[socket.id] = true;
-
-    socket.on("play", (data) => {
-      console.log(`data`);
-      console.log(data);
-
-      // Store the play data in the room
-      rooms[room].jugadas.push({
-        select: data.select,
-        navegadorId: data.navegadorId,
-      });
-
-      console.log(`jugadas`);
-      console.log(rooms[room].jugadas);
-
-      // Check if all players in the room have made their move
-      const playerCount = Object.keys(rooms[room].players).length;
-      if (rooms[room].jugadas.length === playerCount) {
-        // Implement your game logic based on room data
-        // ...
-
-        // Example: Broadcasting messages to all clients in the room
-        io.to(room).emit("mensajeServidor", "Some message");
-
-        // Clear room data after the game
-        rooms[room].jugadas = [];
-      }
-    });
-
-    socket.on("disconnect", () => {
-      // Remove the player from the room on disconnect
-      delete rooms[room].players[socket.id];
-    });
+    let clientId = data.navegadorId;
+    
   });
-});
+  })
+  
 
 server.listen(3001);
