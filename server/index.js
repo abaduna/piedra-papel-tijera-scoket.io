@@ -122,7 +122,9 @@ const ganar = () => {
 };
 io.on("connection", (socket) => {
   console.log(`connection`);
-  socket.on("play", (data) => {
+  socket.on("create", function(room) {
+    socket.join(room);
+    socket.on("play", (data) => {
     console.log(`data`);
     console.log(data);
     jugadas.push(data);
@@ -141,6 +143,8 @@ io.on("connection", (socket) => {
     let clientId = data.navegadorId;
     
   });
+  })
+  
 });
 
 server.listen(3001);
