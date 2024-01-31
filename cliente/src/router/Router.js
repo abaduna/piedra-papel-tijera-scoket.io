@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Multijugador from "../pages/multijugador";
-import Sala from "../pages/Salas";
+import Sala from "../pages/Sala";
 import Home from "../pages/Home";
 import Individual from "../pages/Individual";
 const RouterPrincipal = () => {
