@@ -12,6 +12,7 @@ function App() {
   let data = {
     select,
     navegadorId: id,
+    room:11
   };
   useEffect(() => {
     socket.on("connect", () => {
@@ -27,7 +28,7 @@ function App() {
   const elejir = () => {
     console.log(data);
     socket.emit("play", data);
-    console.log(`id ${data.customId}`);
+    console.log(`id ${data.navegadorId}`);
   };
   return (
     <div>
