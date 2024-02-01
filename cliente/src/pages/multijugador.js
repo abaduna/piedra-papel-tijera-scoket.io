@@ -6,10 +6,9 @@ import { useParams } from "react-router-dom";
 
 function Multijugador() {
   const { roomState } = useParams();
-  const socket = io(`http://localhost:3001/?room=room${roomState}`);
-  var urlParams = new URLSearchParams(window.location.search);
-  var room = urlParams.get("room");
-  socket.emit("create", room);
+  const socket = io(`http://localhost:3001/?room=${roomState}`);
+  
+  
   const [select, setSelct] = useState(null);
   const [id, setId] = useState(null);
   const [resultado, setResultado] = useState(null);
@@ -22,17 +21,23 @@ function Multijugador() {
     socket.on("connect", () => {
       console.log(`conection ${socket.id}`);
       setId(socket.id);
+      socket.emit("create", roomState);
     });
     socket.on("mensajeServidor", (data) => {
       console.log("Mensaje del servidor:", data);
       setResultado(data);
     });
+    
   }, []);
 
   const elejir = () => {
-    console.log(data);
-    socket.emit("play", data);
-    console.log(`id ${data.customId}`);
+    
+    if (socket.connected) {
+      socket.emit("play", data);
+      console.log(`id ${data.navegadorId}`);
+    } else {
+      console.error("Socket not connected.");
+    }
   };
   return (
     <div>
