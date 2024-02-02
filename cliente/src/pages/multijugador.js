@@ -5,10 +5,9 @@ import { Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 function Multijugador() {
-  const { roomState } = useParams();
-  const socket = io(`http://localhost:3001/?room=${roomState}`);
-  
-  
+  const { salaId } = useParams();
+  const socket = io(`http://localhost:3001`);
+
   const [select, setSelct] = useState(null);
   const [id, setId] = useState(null);
   const [resultado, setResultado] = useState(null);
@@ -16,28 +15,22 @@ function Multijugador() {
   let data = {
     select,
     navegadorId: id,
+    room: salaId,
   };
   useEffect(() => {
     socket.on("connect", () => {
       console.log(`conection ${socket.id}`);
       setId(socket.id);
-      socket.emit("create", roomState);
     });
     socket.on("mensajeServidor", (data) => {
       console.log("Mensaje del servidor:", data);
       setResultado(data);
     });
-    
   }, []);
 
   const elejir = () => {
-    
-    if (socket.connected) {
-      socket.emit("play", data);
-      console.log(`id ${data.navegadorId}`);
-    } else {
-      console.error("Socket not connected.");
-    }
+    socket.emit("play", data);
+    console.log(`id ${data.navegadorId}`);
   };
   return (
     <div>

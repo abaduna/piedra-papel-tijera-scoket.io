@@ -8,23 +8,8 @@ const io = require("socket.io")(server, {
   },
 });
 
-// Usamos un objeto para almacenar los datos de cada sala
-let rooms = {};
-
-const ganar = (room) => {
-  console.log(`room`);
-  console.log(room);
-  // Accedemos a los datos de la sala usando la variable room
-  let jugadas = room.jugadas;
-  console.log(`jugadas ${jugadas}`);
-  let jugadorUno = room.jugadorUno;
-  console.log(`jugadorUno ${jugadorUno}`);
-  let jugadorDos = room.jugadorDos;
-  console.log(`jugadorDos ${jugadorDos}`);
-  let idJugadoUno = room.idJugadoUno;
-  console.log(`idJugadoUno ${idJugadoUno}`);
-  let idJugadoDos = room.idJugadoDos;
-
+let game = {};
+const ganar = (jugadorUno, idJugadoUno, jugadorDos, idJugadoDos) => {
   if (jugadorUno === 1) {
     if (jugadorDos === 1) {
       console.log(`empate`);
@@ -76,59 +61,56 @@ const ganar = (room) => {
       io.to(idJugadoDos).emit("mensajeServidor", "empate");
     }
   }
-  // Limpiamos los datos de la sala después de la partida
-  console.log(`rooms[room]`);
-  console.log(rooms[room]);
-  rooms[room] = {
-    jugadas: [],
-    jugadorUno: null,
-    jugadorDos: null,
-    idJugadoUno: null,
-    idJugadoDos: null,
-  };
+};
+const players = (jugadas) => {
+  console.log(`jugadas`);
+  console.log(jugadas);
+  jugadorUno = jugadas[0].select;
+  idJugadoUno = jugadas[0].navegadorId;
+  console.log(`jugadorUno ${jugadorUno}`);
+
+  if (jugadas[1]) {
+    jugadorDos = jugadas[1].select;
+    idJugadoDos = jugadas[1].navegadorId;
+    console.log(`jugadorDos ${jugadorDos}`);
+    ganar(jugadorUno, idJugadoUno, jugadorDos, idJugadoDos);
+  }
 };
 
-io.on("connection", async (socket) => {
-  console.log(`connection ${socket.id}`);
-  socket.on("create", function (room) {
-    // Unimos el socket a la sala
-    socket.join(room);
-    console.log(`room`);
-    console.log(room);
-    rooms[room] = {
-      jugadas: [],
-      jugadorUno: null,
-      jugadorDos: null,
-      idJugadoUno: null,
-      idJugadoDos: null,
-    };
-    socket.on("play", (data) => {
-      console.log(`play`);
-      console.log(`data`);
-      console.log(data);
-      // Añadimos la jugada al array de jugadas de la sala
-      rooms[room].jugadas.push(data);
+io.on("connection", (socket) => {
+  console.log(`connection`);
+  let room = 10; //sacarlo desde el front
 
-      console.log(`jugadas`);
-      console.log(rooms[room].jugadas);
-      // Asignamos los valores de los jugadores y los identificadores según el orden de las jugadas
-      rooms[room].jugadorUno = rooms[room].jugadas[0].select;
-      rooms[room].idJugadoUno = rooms[room].jugadas[0].navegadorId;
-      console.log(`jugadorUno ${rooms[room].jugadorUno}`);
-      console.log(`rooms`);
-      console.log(rooms);
-      if (rooms[room].jugadas[1]) {
-        rooms[room].jugadorDos = rooms[room].jugadas[1].select;
-        rooms[room].idJugadoDos = rooms[room].jugadas[1].navegadorId;
-        console.log(`jugadorDos ${rooms[room].jugadorDos}`);
-        console.log(`rooms`);
-        console.log(rooms);
-        ganar(rooms[room]);
-        console.log(`rooms`);
-        console.log(rooms);
-      }
-      
+  socket.on("play", (data) => {
+    const room = data.room;
+
+    console.log(`data`);
+    console.log(data);
+
+    console.log(game);
+    // game[room] = jugadas.push(data);
+    // console.log(game);
+    // Verifica si la sala ya existe en el objeto 'game'
+    if (!game[room]) {
+      // Si no existe, crea un nuevo objeto con un array de jugadas
+      game[room] = { jugadas: [] };
+    }
+    game[room].jugadas.push({
+      select: data.select,
+      navegadorId: data.navegadorId,
     });
+
+    for (const juego in game) {
+      console.log(game);
+      console.log(`juego`);
+      console.log(game[juego].jugadas);
+      players(game[juego].jugadas);
+      console.log(`game`);
+      console.log(game);
+      if (game[juego].jugadas[1]) {
+        delete game[juego]
+      }
+    }
 
     
   });

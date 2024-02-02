@@ -14,7 +14,7 @@ const RouterPrincipal = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sala" element={<Sala />} />
-        <Route path="/room/:roomState" element={<Multijugador />} />
+        <Route path="/room/:salaId" element={<Multijugador />} />
         <Route path="/individual" element={<Individual />} />
         {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
